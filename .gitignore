@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.DS_Store
+# keep your real bank statements out of git
+*.csv
+!data/sample_transactions.csv
