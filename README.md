@@ -46,7 +46,7 @@ DS_Expense_Analyzer/
 │   ├── test_expenses.py         # analysis tests
 │   └── test_app.py              # dashboard smoke tests (no browser needed)
 ├── requirements.txt
-└── Dockerfile                   # for Hugging Face Spaces / Docker
+└── Dockerfile                   # to run anywhere with Docker
 ```
 
 ## How to run (step by step)
@@ -114,16 +114,14 @@ You need three columns, in any order. Any of these names work (capitalisation do
 
 To teach it new merchants, add keywords to `CATEGORY_KEYWORDS` in `expenses.py`.
 
-## Deploy free on Hugging Face Spaces
+## Deploy free on Streamlit Community Cloud
 
-1. At https://huggingface.co go to **New → Space**, choose SDK **Docker** with the **Blank** template, then click **Create Space**.
-2. Push this repo to the Space:
-   ```bash
-   git remote add space https://huggingface.co/spaces/<hf-username>/<space-name>
-   git push space main
-   ```
-   Use a Hugging Face **access token** with *write* permission as the password.
-3. After a 2–3 minute build, the app is live at `https://huggingface.co/spaces/<hf-username>/<space-name>`.
+1. Sign in at https://share.streamlit.io with your GitHub account.
+2. Click **Create app → Deploy a public app from GitHub**.
+3. Fill in **Repository** `<your-username>/DS_Expense_Analyzer`, **Branch** `main` and **Main file path** `app.py`.
+4. Click **Deploy**.
+
+After a few minutes the app is live at a public `https://<name>.streamlit.app` link. Apps with no visitors for 12 hours go to sleep; the next visitor wakes them with one click.
 
 ## Run with Docker (optional)
 
