@@ -20,7 +20,7 @@ Works with your own bank export (column names like `Narration` / `Withdrawal Amt
 - **Feature engineering:** keyword-based categorisation (Food, Transport, Fuel, Bills, Shopping…) with word-boundary matching, so `OLA CABS` → Transport but `COCA COLA` is not.
 - **Exploratory analysis:** totals, share per category, monthly trend stacked by category.
 - **Anomaly detection:** a robust **modified z-score** (median and MAD instead of mean and standard deviation), computed per category. A transaction is flagged only if it is statistically extreme **and** at least 3× the typical amount. On the sample data it finds exactly the 3 planted anomalies (a ₹72,000 laptop, a ₹6,800 party order and a ₹3,900 airport cab) with no false alarms.
-- **Tests:** 18 tests for parsing, categorisation, summaries and anomaly detection, plus headless tests of the dashboard.
+- **Tests:** 21 tests for parsing, categorisation, summaries and anomaly detection, plus headless tests of the dashboard.
 
 ## Example output (`python analyze.py`)
 
@@ -42,6 +42,7 @@ DS_Expense_Analyzer/
 ├── analyze.py                   # command-line report
 ├── app.py                       # Streamlit dashboard
 ├── data/sample_transactions.csv # 6 months of realistic fake transactions
+├── test_files/                  # 3 statements in different bank formats to try uploading
 ├── tests/
 │   ├── test_expenses.py         # analysis tests
 │   └── test_app.py              # dashboard smoke tests (no browser needed)
@@ -82,7 +83,7 @@ pip install -r requirements.txt
 ```bash
 python -m pytest -v
 ```
-Expected: `18 passed` (about 2 seconds).
+Expected: `21 passed` (about 2 seconds).
 
 ### 4. Command-line report
 
@@ -97,7 +98,7 @@ python analyze.py statement.csv --dayfirst # if dates look like 31/01/2026
 ```bash
 streamlit run app.py
 ```
-Open http://localhost:8501. It starts with the sample data. Upload your own CSV from the sidebar, and use the **sensitivity** slider to flag more or fewer anomalies.
+Open http://localhost:8501. It starts with the sample data. Upload your own CSV from the sidebar, or one of the files in [`test_files/`](test_files/) (an HDFC-style export, a negative-amounts export, and one with your own categories), and use the **sensitivity** slider to flag more or fewer anomalies.
 
 ## Your CSV format
 

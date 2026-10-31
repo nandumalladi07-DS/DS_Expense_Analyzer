@@ -7,3 +7,4 @@ venv/
 # keep your real bank statements out of git
 *.csv
 !data/sample_transactions.csv
+!test_files/*.csv

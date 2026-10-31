@@ -80,3 +80,28 @@ def test_no_false_alarms_on_regular_bills(sample_df):
 def test_anomalies_empty_when_too_little_history():
     csv = "date,description,amount\n2026-01-01,SWIGGY,100\n2026-01-02,SWIGGY,9000\n"
     assert ex.detect_anomalies(ex.load_transactions(csv)).empty
+
+
+TEST_FILES = Path(__file__).resolve().parents[1] / "test_files"
+
+
+def test_hdfc_style_test_file():
+    df = ex.load_transactions(str(TEST_FILES / "hdfc_style_statement.csv"), dayfirst=True)
+    assert not df["description"].str.contains("SALARY").any()  # deposits ignored
+    assert df["month"].unique().tolist() == ["2026-07", "2026-08", "2026-09"]
+    flagged = set(ex.detect_anomalies(df)["description"])
+    assert {"POS AMAZON PAY INDIA-IPHONE", "UPI-SWIGGY-SWIGGY8@ICICI-Party order"} <= flagged
+
+
+def test_negative_amounts_test_file():
+    df = ex.load_transactions(str(TEST_FILES / "negative_amounts_statement.csv"))
+    assert (df["amount"] > 0).all()
+    assert not df["description"].isin(["Salary credit", "Myntra refund"]).any()
+    assert "Ola Cabs ride airport" in set(ex.detect_anomalies(df)["description"])
+
+
+def test_own_categories_test_file():
+    df = ex.load_transactions(str(TEST_FILES / "with_own_categories.csv"))
+    cats = dict(zip(df["description"], df["category"]))
+    assert cats["Mom birthday gift"] == "Gifts"
+    assert cats["Swiggy dinner"] == "Food & Dining"  # blank → auto-categorised
